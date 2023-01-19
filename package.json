@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "name": "logcica-backend",
+  "version": "1.0.0",
+  "description": "logcica backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "author": "olivier5741",
+  "license": "MIT",
+  "dependencies": {
+    "@fragaria/address-formatter": "^5.0.1",
+    "@qalincalabs/consolidator": "^1.4.1",
+    "node-fetch": "^3.3.0",
+    "object-hash": "^3.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
