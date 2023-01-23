@@ -12,6 +12,7 @@
   "dependencies": {
     "@fragaria/address-formatter": "^5.0.1",
     "@qalincalabs/consolidator": "^1.4.1",
+    "@qalincalabs/limosa": "^1.6.1",
     "node-fetch": "^3.3.0",
     "object-hash": "^3.0.0"
   },
