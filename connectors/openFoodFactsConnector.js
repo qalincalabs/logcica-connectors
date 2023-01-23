@@ -29,7 +29,7 @@ const defaultLocalisedTagProperties = [
 ];
 
 // open food fact connector
-export class OpenFoodFactConnector {
+export class OpenFoodFactsConnector {
   constructor(config) {
     this.languages = config.languages
     this.apiProductUrl = "https://world.openfoodfacts.org/api/v2/product/"

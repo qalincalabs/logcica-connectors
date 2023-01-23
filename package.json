@@ -1,14 +1,27 @@
 {
   "type": "module",
-  "name": "logcica-backend",
+  "name": "@qalincalabs/logcica-connectors",
   "version": "1.0.0",
-  "description": "logcica backend",
+  "description": "connectors and mappers for external platforms logCiCa can interact with",
   "main": "index.js",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qalincalabs/logcica-connectors.git"
+  },
+  "keywords": [
+    "datawarehouse",
+    "connectors",
+    "transformers"
+  ],
   "author": "olivier5741",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qalincalabs/logcica-connectors/issues"
+  },
+  "homepage": "https://github.com/qalincalabs/logcica-connectors#readme",
   "dependencies": {
     "@fragaria/address-formatter": "^5.0.1",
     "@qalincalabs/consolidator": "^1.4.1",

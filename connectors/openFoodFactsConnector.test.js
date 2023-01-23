@@ -10,7 +10,7 @@ test("Open food facts connector", async () => {
     ],
   };
 
-  const connector = new OpenFoodFactConnector({
+  const connector = new OpenFoodFactsConnector({
     languages: ["en", "fr", "nl", "de"],
   });
 
