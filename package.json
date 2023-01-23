@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@qalincalabs/logcica-connectors",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "connectors and mappers for external platforms logCiCa can interact with",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "dependencies": {
     "@fragaria/address-formatter": "^5.0.1",
     "@qalincalabs/consolidator": "^1.4.1",
-    "@qalincalabs/limosa": "^1.6.3",
+    "@qalincalabs/limosa": "^1.6.4",
     "node-fetch": "^2.6.8",
     "object-hash": "^3.0.0"
   },
