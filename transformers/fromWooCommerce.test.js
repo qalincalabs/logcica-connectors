@@ -2,12 +2,14 @@ import * as mapper from "./fromWooCommerce.js";
 
 test("WooCommerce mapper", () => {
 
-  const workspace = mapper.mapToWorkspace({
+  const context = mapper.map({
     generalSettings: generalSettings,
-    orders: [order]
+    orders: [order],
+    products: products,
+    variants: variants
   })
 
-  console.log(workspace)
+  console.log(JSON.stringify(context, null, 2))
 });
 
 const order =  {
