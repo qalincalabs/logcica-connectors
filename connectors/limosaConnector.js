@@ -15,9 +15,13 @@ export class LimosaConnector {
       { format: "jsonv2", addressdetails: 1, namedetails: 1, extratags: 1 }
     );
 
-    const exactPhotonPlace = fromPhoton.mapPlaceFeature(
-      photonResult.exactFeature
-    );
+    const okFeature = photonResult.exactFeature 
+      ?? photonResult.upperFeatures.find(f => f.properties.type == "street")
+
+    if(okFeature == null)
+      return
+
+    const exactPhotonPlace = fromPhoton.mapPlaceFeature(okFeature);
 
     const exactNominatimPlaces = nominatimResult.map((r) =>
       fromNominatim.mapLookupResult(r)
