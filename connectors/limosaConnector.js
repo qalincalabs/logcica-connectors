@@ -6,7 +6,12 @@ import { Consolidator } from "@qalincalabs/consolidator";
 export class LimosaConnector {
   constructor() {}
 
-  async enrichPlace(data) {
+  async enrichPlace(inputData) {
+
+    // lazy copy
+    const data = Object.assign({}, inputData)
+    data.address = Object.assign({}, inputData.address)
+
     const photonResult = await limosa.photonLocate(data.address);
 
     const uuids = limosa.extractOsmUuids(photonResult);
