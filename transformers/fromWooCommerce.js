@@ -130,9 +130,20 @@ export function map(context) {
     name: extractAddressName(externalOrder.billing),
   };
 
+  const noShippingMethod = {
+    ids: ["logcica/no_shipping_method"],
+    name: "No shipping method",
+    owner: {
+      workspace: {
+        ids: sellerWorkspace.ids
+      }
+    }
+  }
+
   const newContext = {
     workspaces: [sellerWorkspace, buyerWorkspace],
     places: [sellerShippingPlace, buyerShippingPlace],
+    shippingMethods: [noShippingMethod]
   };
 
   const order = {
@@ -166,6 +177,9 @@ export function map(context) {
         ids: buyerShippingPlace.ids,
       },
     },
+    shippingMethod: {
+      ids: noShippingMethod.ids
+    }
   };
 
   const productClassification = {
