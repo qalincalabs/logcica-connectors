@@ -97,7 +97,7 @@ export function map(context) {
   const externalOrder = context.orders[0];
   const sellerWorkspace = extractWorkspaceFromOrder(context);
   const externalProducts = context.products;
-  const externalVariants = context.variants;
+  const externalVariants = context.variations;
 
   const sellerWorkspaceKey = sellerWorkspace.key;
 

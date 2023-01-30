@@ -6,7 +6,7 @@ test("WooCommerce mapper", () => {
     generalSettings: generalSettings,
     orders: [order],
     products: products,
-    variants: variants
+    variations: variations
   })
 
   console.log(JSON.stringify(context, null, 2))
@@ -756,7 +756,7 @@ const order =  {
     }
   ]
 
-  const variants = [
+  const variations = [
     {
       "id": 137,
       "name": "Carotte - Mauve",
