@@ -46,7 +46,7 @@ export function extractWorkspaceFromOrder(context) {
 
   const workspace = {
     ids: [shopKey],
-    key: shopKey.replaceAll(".", "-"),
+    key: shopKey.replace("/./g", "-"),
     link: shopUrl,
     name: shopKey, // TODO can't get the name ...
   };
