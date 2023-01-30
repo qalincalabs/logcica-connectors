@@ -149,7 +149,7 @@ export function map(context) {
   const order = {
     ids: [sellerWorkspace.key + "/orders/" + externalOrder.id],
     number: externalOrder.id.toString(),
-    createdAt: externalOrder.date_created_gmt + "Z",
+    createdAt: new Date(externalOrder.date_created_gmt + "Z"),
     link:
       sellerWorkspace.link +
       "/wp-admin/post.php?post=" +
@@ -221,7 +221,7 @@ export function map(context) {
   const products = externalReferencedProducts.map((p) => ({
     ids: [getProductId(p)], // TODO : better ids
     name: p.name,
-    createdAt: p.date_created_gmt + "Z",
+    createdAt: new Date(p.date_created_gmt + "Z"),
     categories: p.categories.map((c) => ({
       ids: [getProductCategoryId(c)],
     })),
