@@ -179,7 +179,7 @@ function mapProduct(product, options) {
 
   if(product.grossWeight != null) {
     product.grossWeight = {
-      value: product.grossWeight["s:value"]["@value"],
+      value: parseFloat(product.grossWeight["s:value"]["@value"]),
       unit: {
         code: product.grossWeight["s:unitCode"],
       },
