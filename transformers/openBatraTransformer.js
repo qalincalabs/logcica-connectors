@@ -167,12 +167,24 @@ function mapProduct(product, options) {
 
   product.publishedAt = new Date(product.publishedAt);
 
-  product.netContent = {
-    value: product.netContent["s:value"]["@value"],
-    unit: {
-      code: product.netContent["s:unitCode"],
-    },
-  };
+  // TODO factorise to quantity function
+  if (product.netContent != null) {
+    product.netContent = {
+      value: product.netContent["s:value"]["@value"],
+      unit: {
+        code: product.netContent["s:unitCode"],
+      },
+    };
+}
+
+  if (product.grossWeight != null) {
+    product.grossWeight = {
+      value: product.grossWeight["s:value"]["@value"],
+      unit: {
+        code: product.grossWeight["s:unitCode"],
+      },
+    };
+  }
 
   if (product.supplierSpecifiedMinimumConsumerStorageDays != null)
     product.supplierSpecifiedMinimumConsumerStorageDays =
@@ -191,10 +203,10 @@ function mapProduct(product, options) {
       sequence: i.ingredientSequence["@value"].toString(),
     };
 
-    if(i.ingredientContentPercentage != null)
-      ing.contentPercentage = i.ingredientContentPercentage["@value"]
+    if (i.ingredientContentPercentage != null)
+      ing.contentPercentage = i.ingredientContentPercentage["@value"];
 
-    return ing
+    return ing;
   });
 
   delete product.ingredient;
