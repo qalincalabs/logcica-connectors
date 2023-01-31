@@ -43,9 +43,7 @@ const assignTranslationToProperties = [
 ];
 
 function assignTranslation(product, propertyName, languageOptions) {
-
-  if(product[propertyName] == null)
-    return
+  if (product[propertyName] == null) return;
 
   product[propertyName] = extractMainTranslation(
     product[propertyName],
@@ -54,9 +52,7 @@ function assignTranslation(product, propertyName, languageOptions) {
 }
 
 function extractMainTranslation(p, languageOptions) {
-
-  if(p == null)
-    return
+  if (p == null) return;
 
   let prop = p.find((n) => n["@language"] == languageOptions.main);
   if (prop == null) prop = p[0];
@@ -93,58 +89,52 @@ function isolateNutritionMeasurementType(product) {
 }
 
 export function extractFromProduct(product) {
-    const options = {
-        language: {
-            main: "fr",
-            all: ["fr"]
-        }
-    };
+  const options = {
+    language: {
+      main: "fr",
+      all: ["fr"],
+    },
+  };
 
-    mapProduct(product, options);
+  mapProduct(product, options);
 
-    const { productCategory, productClassification } = extractProductCategory(
-        product,
-        options
-    );
+  const { productCategory, productClassification } = extractProductCategory(
+    product,
+    options
+  );
 
-    const workspace = product.producer;
+  const workspace = product.producer;
 
-    mapOrganizationToWorkspace(
-        workspace,
-        options
-    );
+  mapOrganizationToWorkspace(workspace, options);
 
-    // relations
-    product.producer = {
-        workspace: {
-            ids: workspace.ids,
-        },
-    };
+  // relations
+  product.producer = {
+    workspace: {
+      ids: workspace.ids,
+    },
+  };
 
-    product.categories = [
-        {
-            ids: productCategory.ids,
-        },
-    ];
+  product.categories = [
+    {
+      ids: productCategory.ids,
+    },
+  ];
 
-    // skip netContent
-    // skip nutrient
-    delete product.nutrientList;
-    delete product.netContent;
+  // skip netContent
+  // skip nutrient
+  delete product.nutrientList;
+  delete product.netContent;
 
-    const context = {
-        products: [product],
-        workspaces: [workspace],
-        productCategories: [productCategory],
-        productClassifications: [productClassification],
-    };
-    return context;
+  const context = {
+    products: [product],
+    workspaces: [workspace],
+    productCategories: [productCategory],
+    productClassifications: [productClassification],
+  };
+  return context;
 }
 
-function extractProductCategory(
-  product,
-  options
-) {
+function extractProductCategory(product, options) {
   const productClassification = {
     ids: ["gpc"],
   };
@@ -175,7 +165,7 @@ function mapProduct(product, options) {
     assignTranslation(product, p, options.language);
   });
 
-  product.publishedAt = new Date(product.publishedAt)
+  product.publishedAt = new Date(product.publishedAt);
 
   product.netContent = {
     value: product.netContent["s:value"]["@value"],
@@ -184,31 +174,35 @@ function mapProduct(product, options) {
     },
   };
 
-  if(product.supplierSpecifiedMinimumConsumerStorageDays != null)
-  product.supplierSpecifiedMinimumConsumerStorageDays =
-    product.supplierSpecifiedMinimumConsumerStorageDays["@value"];
+  if (product.supplierSpecifiedMinimumConsumerStorageDays != null)
+    product.supplierSpecifiedMinimumConsumerStorageDays =
+      product.supplierSpecifiedMinimumConsumerStorageDays["@value"];
 
-  if(product.image != null)
-  product.image = {
-    url: product.image["s:url"]["@id"],
-  };
+  if (product.image != null)
+    product.image = {
+      url: product.image["s:url"]["@id"],
+    };
 
-  product.ingredientList = product.ingredient.map((i) => ({
-    ingredient: {
-      name: extractMainTranslation(i.ingredientName, options.language)
-    },
-    sequence: i.ingredientSequence["@value"].toString(),
-  }));
+  product.ingredientList = product.ingredient.map((i) => {
+    const ing = {
+      ingredient: {
+        name: extractMainTranslation(i.ingredientName, options.language),
+      },
+      sequence: i.ingredientSequence["@value"].toString(),
+    };
+
+    if(i.ingredientContentPercentage != null)
+      ing.contentPercentage = i.ingredientContentPercentage["@value"]
+
+    return ing
+  });
 
   delete product.ingredient;
 
   product.ids = ["batra/products/" + product.gtin, "gtin/" + product.gtin];
 }
 
-function mapOrganizationToWorkspace(
-  workspace,
-  options
-) {
+function mapOrganizationToWorkspace(workspace, options) {
   workspace.renameProperty("contactPoint", "contactPoints");
   workspace.renameProperty("vatID", "vatId");
   workspace.renameProperty("taxID", "taxId");
@@ -243,9 +237,5 @@ function mapOrganizationToWorkspace(
   ];
   delete workspace["@id"];
 
-  assignTranslation(
-    workspace,
-    "name",
-    options.language
-  );
+  assignTranslation(workspace, "name", options.language);
 }

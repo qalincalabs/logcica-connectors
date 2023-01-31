@@ -1,6 +1,5 @@
 import * as transformer from "./openBatraTransformer.js";
 
-
 // todo add published date
 test("OpenBatra clean up", () => {
   const product = openBatraProduct;
@@ -216,6 +215,10 @@ const openBatraProduct = {
           "@language": "fr",
         },
       ],
+      ingredientContentPercentage: {
+        "@value": "86",
+        "@type": "xsd:float",
+      },
     },
   ],
   gtin: "05430001830002",
@@ -351,6 +354,5 @@ const openBatraProduct = {
     ],
     email: ["daniel@aktina.be", "hello@aktina.be"],
   },
-  "publishedAt":
-"2023-01-31T15:18:13.000Z"
+  publishedAt: "2023-01-31T15:18:13.000Z",
 };
