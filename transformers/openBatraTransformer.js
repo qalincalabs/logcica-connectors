@@ -195,7 +195,7 @@ function mapProduct(product, options) {
     ingredient: {
       name: extractMainTranslation(i.ingredientName, options.language)
     },
-    sequence: i.ingredientSequence["@value"],
+    sequence: i.ingredientSequence["@value"].toString(),
   }));
 
   delete product.ingredient;
