@@ -177,7 +177,7 @@ function mapProduct(product, options) {
     };
 }
 
-  if (product.grossWeight != null) {
+  if(product.grossWeight != null) {
     product.grossWeight = {
       value: product.grossWeight["s:value"]["@value"],
       unit: {
@@ -188,7 +188,7 @@ function mapProduct(product, options) {
 
   if (product.supplierSpecifiedMinimumConsumerStorageDays != null)
     product.supplierSpecifiedMinimumConsumerStorageDays =
-      product.supplierSpecifiedMinimumConsumerStorageDays["@value"];
+    parseInt(product.supplierSpecifiedMinimumConsumerStorageDays["@value"]);
 
   if (product.image != null)
     product.image = {
