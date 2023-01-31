@@ -175,6 +175,8 @@ function mapProduct(product, options) {
     assignTranslation(product, p, options.language);
   });
 
+  product.publishedAt = new Date(product.publishedAt)
+
   product.netContent = {
     value: product.netContent["s:value"]["@value"],
     unit: {
