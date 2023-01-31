@@ -43,6 +43,10 @@ const assignTranslationToProperties = [
 ];
 
 function assignTranslation(product, propertyName, languageOptions) {
+
+  if(product[propertyName] == null)
+    return
+
   product[propertyName] = extractMainTranslation(
     product[propertyName],
     languageOptions
@@ -50,6 +54,10 @@ function assignTranslation(product, propertyName, languageOptions) {
 }
 
 function extractMainTranslation(p, languageOptions) {
+
+  if(p == null)
+    return
+
   let prop = p.find((n) => n["@language"] == languageOptions.main);
   if (prop == null) prop = p[0];
   return prop["@value"];
@@ -174,9 +182,11 @@ function mapProduct(product, options) {
     },
   };
 
+  if(product.supplierSpecifiedMinimumConsumerStorageDays != null)
   product.supplierSpecifiedMinimumConsumerStorageDays =
     product.supplierSpecifiedMinimumConsumerStorageDays["@value"];
 
+  if(product.image != null)
   product.image = {
     url: product.image["s:url"]["@id"],
   };
