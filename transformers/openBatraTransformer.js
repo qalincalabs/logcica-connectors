@@ -170,7 +170,7 @@ function mapProduct(product, options) {
   // TODO factorise to quantity function
   if (product.netContent != null) {
     product.netContent = {
-      value: product.netContent["s:value"]["@value"],
+      value: parseFloat(product.netContent["s:value"]["@value"]),
       unit: {
         code: product.netContent["s:unitCode"],
       },
@@ -204,7 +204,7 @@ function mapProduct(product, options) {
     };
 
     if (i.ingredientContentPercentage != null)
-      ing.contentPercentage = i.ingredientContentPercentage["@value"];
+      ing.contentPercentage = parseFloat(i.ingredientContentPercentage["@value"]);
 
     return ing;
   });
