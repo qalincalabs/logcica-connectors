@@ -3,9 +3,9 @@ import { LimosaConnector } from "./limosaConnector.js";
 test("Limosa", async () => {
   const connector = new LimosaConnector();
   const enrichedPlace = await connector.enrichPlace(
-    placeWhereOnlyTheStreetIsFound
+    placeInAnotherProvince
   );
-  console.log(JSON.stringify(placeWhereOnlyTheStreetIsFound, null, 2));
+  console.log(JSON.stringify(placeInAnotherProvince, null, 2));
   console.log(JSON.stringify(enrichedPlace, null, 2));
 });
 
@@ -19,6 +19,18 @@ const placeWhereOnlyTheStreetIsFound = {
     country: "Belgium",
   },
   ids: ["logcica/places/digicirco-org-rue-des-cueilleurs-7-6060-gilly-belgium"],
+};
+
+const placeInAnotherProvince = {
+  name: "digicirco.org",
+  services: ["shipping"],
+  address: {
+    street: "5 Rue du Moulin",
+    postalCode: "5555",
+    locality: "Naomé",
+    country: "Belgium",
+  },
+  ids: ["logcica/places/dummy_somewhere"],
 };
 
 const place = {

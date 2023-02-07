@@ -12,7 +12,21 @@ export class LimosaConnector {
     const data = Object.assign({}, inputData)
     data.address = Object.assign({}, inputData.address)
 
-    const photonResult = await limosa.photonLocate(data.address);
+    const addressSecondTry = Object.assign({},data.address)
+
+    let photonResult = await limosa.photonLocate(data.address);
+
+    // HACK retry with upperfeature city as locality (more a hack, should be in limosa)
+
+    if(photonResult.exactFeature == null 
+      && photonResult.upperFeatures?.length > 0 && photonResult.upperFeatures[0].properties?.city != null){
+      addressSecondTry.locality = photonResult.upperFeatures[0].properties.city
+      const secondPhotonResult = await limosa.photonLocate(addressSecondTry);
+
+      if(secondPhotonResult.exactFeature != null)
+        photonResult = secondPhotonResult
+
+    }
 
     const uuids = limosa.extractOsmUuids(photonResult);
     const nominatimResult = await limosa.nominatimLookup(
