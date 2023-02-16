@@ -4,7 +4,7 @@ const defaultConfig = {
       element.ids = [
         context.target.key +
           "/" +
-          extraction.destination.key +
+          (extraction.destination.idKey ?? extraction.destination.key) +
           "/" +
           element.id,
       ];

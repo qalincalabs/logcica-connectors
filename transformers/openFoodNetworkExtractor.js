@@ -1,6 +1,11 @@
 import * as contextExtract from "../core/extract.js"
+import * as main from "../core/main.js"
 
 export function cleanUpOrder(order) {
+
+  order.completed_at = main.normalizeDate(order.completed_at)
+  order.created_at = main.normalizeDate(order.created_at)
+  
   order.user = {
     id: order.user_id,
     full_name: order.full_name,
@@ -59,6 +64,10 @@ export function cleanUpOrder(order) {
 }
 
 export function cleanUpProduct(product) {
+
+  product.import_date = main.normalizeDate(product.import_date)
+  product.available_on = main.normalizeDate(product.available_on)
+
   delete product.master;
   delete product.sku;
   delete product.inherits_properties;
@@ -85,6 +94,8 @@ export function cleanUpProduct(product) {
   delete product.category_id;
 
   for (const variant of product.variants) {
+    variant.import_date = main.normalizeDate(variant.import_date)
+
     delete variant.stock_location_id;
     delete variant.stock_location_name;
     delete variant.variant_overrides_count;
@@ -104,9 +115,9 @@ export function extract(context) {
 
 export function getConfig() {
 
-  const extractFromOrder = (destinationName, orderProperty) => {
+  const extractFromOrder = (destinationName, orderProperty, destinationIdKey) => {
     return {
-      destination: { key: destinationName },
+      destination: { key: destinationName, idKey: destinationIdKey },
       extractAll: (ctx) => ctx.orders.map((o) => o[orderProperty]),
     };
   };
@@ -116,46 +127,46 @@ export function getConfig() {
     destination: { key: "logCiCa" },
     extractions: [
       {
-        destination: { key: "enterprises" },
+        destination: { key: "enterprises", idKey: "enterprise" },
         extractAll: (ctx) => ctx.products.map((p) => p.producer),
       },
       {
-        destination: { key: "product_categories" },
+        destination: { key: "product_categories", idKey: "product_category" },
         extractAll: (ctx) => ctx.products.map((p) => p.category),
       },
       {
-        destination: { key: "tax_categories" },
+        destination: { key: "tax_categories", idKey: "tax_category" },
         extractAll: (ctx) => ctx.products.map((p) => p.tax_category),
       },
       {
-        destination: { key: "variants" },
+        destination: { key: "variants", idKey: "variant" },
         extractAll: (ctx) => ctx.products.map((p) => p.variants).flat(),
       },
       {
-        destination: { key: "products" },
+        destination: { key: "products", idKey: "product" },
         extractAll: (ctx) => ctx.products,
       },
       {
-        destination: { key: "countries" },
+        destination: { key: "countries", idKey: "country" },
         extractAll: (ctx) =>
           ctx.orders
             .map((o) => [o.bill_address.country, o.ship_address.country])
             .flat(),
       },
       {
-        destination: { key: "states" },
+        destination: { key: "states", idKey: "state" },
         extractAll: (ctx) =>
           ctx.orders
             .map((o) => [o.bill_address.state, o.ship_address.state])
             .flat(),
       },
-      extractFromOrder("enterprises", "distributor"),
-      extractFromOrder("users", "user"),
-      extractFromOrder("customers", "customer"),
-      extractFromOrder("order_cycles", "order_cycle"),
-      extractFromOrder("shipping_methods", "shipping_method"),
+      extractFromOrder("enterprises", "distributor", "enterprise"),
+      extractFromOrder("users", "user", "user"),
+      extractFromOrder("customers", "customer", "customer"),
+      extractFromOrder("order_cycles", "order_cycle",  "order_cycle"),
+      extractFromOrder("shipping_methods", "shipping_method", "shipping_method"),
       {
-        destination: { key: "orders" },
+        destination: { key: "orders", idKey: "order" },
         extractAll: (ctx) => ctx.orders,
         distributeRelationships: (el, newCtx) => {
           newCtx.customers

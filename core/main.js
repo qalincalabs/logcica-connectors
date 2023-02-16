@@ -9,6 +9,12 @@ export function sluggify(str) {
     .replace(/\s+/g, "-"); // replace space with dash/hyphen
 }
 
+export function normalizeDate(str){
+  if(str == null)
+    return null
+  return (new Date(str + " GMT")).toISOString().substring(0,10)
+}
+
 export function populateAreaWithins(areas) {
   areas.forEach((a) => (a.relId = a.ids[0]));
 

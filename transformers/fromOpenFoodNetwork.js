@@ -49,11 +49,11 @@ export function map(ofnContext) {
   });
 
   const initContext = (_ofnContext, logcicaContext) => {
-    logcicaContext.workspaces = [{ ids: ["logcica/workspaces/ofn_be"] }];
+    logcicaContext.workspaces = [{ ids: ["logcica/workspace/ofn_be"] }];
 
     logcicaContext.productClassifications = [
       {
-        ids: ["logcica/product_classifications/ofn_be"],
+        ids: ["logcica/product_classification/ofn_be"],
         owner: {
           workspace: {
             ids: ["logcica/workspace/ofn_be"],
@@ -76,7 +76,7 @@ export function map(ofnContext) {
         ids: el.ids,
       })),
       {
-        target: { key: "shipping_methods" },
+        target: { key: "shipping_methods", singular: "shipping_method" },
         destination: { key: "shippingMethods" },
         map: (el) => ({
           ids: el.ids,
@@ -87,11 +87,20 @@ export function map(ofnContext) {
         }),
       },
       {
-        target: { key: "order_cycles" },
+        target: { key: "order_cycles", singular: "order_cycle" },
         destination: { key: "salesSessions" },
         map: (el) => ({
           ids: el.ids,
           owner: mapEnterpriseOwner(el.enterprise),
+        }),
+      },
+      {
+        target: { key: "order_cycles" },
+        destination: { key: "catalogs" },
+        map: (el) => ({
+          ids: el.ids,
+          owner: mapEnterpriseOwner(el.enterprise),
+          // TODO add catalogItem
         }),
       },
       {
@@ -231,7 +240,6 @@ export function mapFromOrderEvent(event) {
       const product = {
         ids: [
           "ofn_be/variant/" + i.variant.id,
-          "ofn_be/variant/id/" + i.variant.id,
         ],
         name: i.variant.name,
         group: {
@@ -331,7 +339,7 @@ export function mapFromOrderEvent(event) {
     {
       number: order.number,
       link: "https://openfoodnetwork.be/admin/orders/" + order.number + "/edit",
-      ids: ["ofn_be/orders/" + order.number],
+      ids: ["ofn_be/order/" + order.number],
       createdAt: order.created_at,
       status: order.status.toLowerCase(),
       shipmentStatus: order.shipment_status.toLowerCase(),

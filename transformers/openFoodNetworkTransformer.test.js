@@ -13,8 +13,15 @@ import * as extractor from "./openFoodNetworkExtractor.js";
 // TODO, if only one variant for product, don't record product group ...
 // TODO, strange way of doing, extractor should take the order event and return ofn context
 
+
+// SINGULAR -> redis and ruby global id do like this !!
+// 
+
 test("Order clean up", () => {
 
+  // (TODO : get category info, get tax category info)
+  // TODO : date in ISO : variant import date, product import date, product available_on,
+  // order completed_at, order created_at, 
   const cleanedUpOrder = extractor.cleanUpOrder(ofnOrderSample);
   const cleanedUpProduct = extractor.cleanUpProduct(
     ofnProductUnpreparedSample
@@ -25,12 +32,19 @@ test("Order clean up", () => {
     products: [cleanedUpProduct],
   };
 
+  console.log("cleaned up")
+  console.log(JSON.stringify(ofnContext, null, 2))
+
+  // extract from API context ...
   const extractedContext = extractor.extract(ofnContext);
+  console.log("extracted")
   console.log(JSON.stringify(extractedContext, null, 2));
 
   const context = mapper.map(extractedContext);
+  console.log("mapped")
   console.log(JSON.stringify(context, null, 2));
 });
+
 
 const ofnOrderSample = {
   id: 422667,
@@ -816,6 +830,281 @@ const explodedOrderSample = {
     },
   ],
 };
+
+const supposedOutput = {
+  "codes": [
+    {
+      "ids": ["ofn_be/country/29"],
+      "name": "Belgium",
+      "list": {
+        "ids": ["iso/country"]
+      }
+    }
+  ],
+  "places": [
+    {
+      "ids": ["ofn_be/address/77881"],
+      "name": "Olivier Wouters",
+      "services": ["shipping"],
+      "private": true,
+      "address": {
+        "street": "Grand rue 40",
+        "postalCode": "6850",
+        "locality": "Carlsbourg",
+        "country": "Belgium"
+      }
+    },
+    {
+      "ids": ["ofn_be/address/77880"],
+      "name": "Olivier Wouters",
+      "services": ["billing"],
+      "private": true,
+      "address": {
+        "street": "Grand rue 40",
+        "postalCode": "6850",
+        "locality": "Carlsbourg",
+        "country": "Belgium"
+      }
+    }
+  ],
+  "workspaces": [
+    {
+      "ids": ["ofn_be/user/3497"]
+    },
+    {
+      "ids": ["ofn_be/enterprise/591"],
+      "name": "Comptoir Demo OFN"
+    },
+    {
+      "ids": ["logcica/workspace/ofn_be"]
+    }
+  ],
+  "customers": [
+    {
+      "ids": ["ofn_be/customer/2997"],
+      "owner": {
+        "workspace": {
+          "ids": ["ofn_be/enterprise/591"]
+        }
+      },
+      "places": [
+        {
+          "ids": ["ofn_be/address/77881"]
+        },
+        {
+          "ids": ["ofn_be/address/77880"]
+        }
+      ]
+    }
+  ],
+  "suppliers": [
+    {
+      "ids": ["ofn_be/user/3497/enterprise/591"],
+      "name": "Comptoir Demo OFN",
+      "owner": {
+        "workspace": {
+          "ids": ["ofn_be/user/3497"]
+        }
+      }
+    }
+  ],
+  "shippingMethods": [
+    {
+      "ids": [
+        "ofn_be/shipping_method/112",
+        "https://openfoodnetwork.be/shippingmethods/112"
+      ],
+      "type": "delivery",
+      "name": "Livraison par Bpost",
+      "description": "La commande vous sera livrée dans les 2 jours ouvrables après la date choisie lors de votre commande - vu les circonstances ce délai peut-être plus long. Exemple : si commande prête pour le lundi 20/04, elle vous sera livrée vers le 22/04.",
+      "owner": {
+        "workspace": {
+          "ids": ["ofn_be/enterprise/591"]
+        }
+      }
+    }
+  ],
+  "salesSessions": [
+    {
+      "ids": ["ofn_be/order_cycle/2880"],
+      "owner": {
+        "workspace": {
+          "ids": ["ofn_be/enterprise/591"]
+        }
+      }
+    }
+  ],
+  "catalogs": [
+    {
+      "ids": ["ofn_be/order_cycle/2880"],
+      "owner": {
+        "workspace": {
+          "ids": ["ofn_be/enterprise/591"]
+        }
+      }
+    }
+  ],
+  "productClassifications": [
+    {
+      "ids": ["logcica/product_classification/ofn_be"],
+      "owner": {
+        "workspace": {
+          "ids": ["logcica/workspace/ofn_be"]
+        }
+      }
+    }
+  ],
+  "productCategories": [
+    {
+      "ids": ["ofn_be/taxon/57"],
+      "classification": {
+        "ids": ["logcica/product_classification/ofn_be"]
+      }
+    }
+  ],
+  "productGroups": [
+    {
+      "ids": ["ofn_be/product/11212"],
+      "name": "Jus de Pomme",
+      "producer": {
+        "workspace": {
+          "ids": ["ofn_be/enterprise/591"]
+        }
+      }
+    }
+  ],
+  "products": [
+    {
+      "ids": [
+        "ofn_be/variant/27701",
+        "ofn_be/variant/id/27701",
+        "gtin/05430001830002",
+        "batra/products/05430001830002"
+      ],
+      "name": "Jus de Pomme",
+      "group": {
+        "ids": ["ofn_be/product/11212"]
+      },
+      "categories": [
+        {
+          "ids": ["ofn_be/taxon/57"]
+        }
+      ],
+      "producer": {
+        "workspace": {
+          "ids": ["ofn_be/enterprise/591"]
+        }
+      },
+      "quantity": {
+        "value": "1",
+        "unit": {
+          "text": "bouteille"
+        }
+      },
+      "gtin": "05430001830002"
+    }
+  ],
+  "offers": [
+    {
+      "ids": ["ofn_be/enterprise/591/variant/27701/price/3.0"],
+      "product": {
+        "ids": ["ofn_be/variant/27701"]
+      },
+      "price": {
+        "value": "3.0"
+      },
+      "owner": {
+        "workspace": {
+          "ids": ["ofn_be/enterprise/591"]
+        }
+      }
+    }
+  ],
+  "catalogItems": [
+    {
+      "ids": ["ofn_be/order_cycle/2880/variant/27701"],
+      "name": "Jus de Pomme",
+      "product": {
+        "ids": ["ofn_be/variant/27701"]
+      },
+      "catalog": {
+        "ids": ["ofn_be/order_cycle/2880"]
+      },
+      "offers": [
+        {
+          "ids": ["ofn_be/enterprise/591/variant/27701/price/3.0"]
+        }
+      ]
+    }
+  ],
+  "orders": [
+    {
+      "number": "R248455128",
+      "link": "https://openfoodnetwork.be/admin/orders/R248455128/edit",
+      "ids": ["ofn_be/orders/R248455128"],
+      "createdAt": "2023-02-16T00:00:00.000Z",
+      "status": "complete",
+      "shipmentStatus": "ready",
+      "paymentStatus": "paid",
+      "buyer": {
+        "customer": {
+          "ids": ["ofn_be/customer/2997"]
+        },
+        "workspace": {
+          "ids": ["ofn_be/user/3497"]
+        }
+      },
+      "seller": {
+        "supplier": {
+          "ids": ["ofn_be/user/3497/enterprise/591"]
+        },
+        "workspace": {
+          "ids": ["ofn_be/enterprise/591"]
+        }
+      },
+      "broker": {
+        "workspace": {
+          "ids": ["logcica/workspace/ofn_be"]
+        }
+      },
+      "channel": {
+        "ids": ["logcica/transaction_channel/ofn_be"],
+        "name": "Open Food Network Belgium"
+      },
+      "shippingAddress": {
+        "place": {
+          "ids": ["ofn_be/address/77881"]
+        }
+      },
+      "shippingMethod": {
+        "ids": ["ofn_be/shipping_method/112"]
+      },
+      "salesSession": {
+        "ids": ["ofn_be/order_cycle/2880"]
+      },
+      "totalPrice": {
+        "value": "15.5"
+      },
+      "lines": [
+        {
+          "name": "Jus de Pomme",
+          "item": {
+            "ids": ["ofn_be/order_cycle/2880/variant/27701"]
+          },
+          "product": {
+            "ids": ["ofn_be/variant/27701"]
+          },
+          "offer": {
+            "ids": ["ofn_be/enterprise/591/variant/27701/price/3.0"]
+          },
+          "quantity": {
+            "value": 3
+          }
+        }
+      ]
+    }
+  ]
+}
 
 const testInput = {
   type: "order_created_or_updated",
