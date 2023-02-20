@@ -62,11 +62,30 @@ function extractMainTranslation(p, languageOptions) {
 function isolateNutritionMeasurementType(product) {
   const suffix = "PerNutrientBasis";
 
-  const nutrientList = [];
+  let nutrientList = [];
 
-  for (const e of Object.entries(product).filter((me) =>
-    me[0].endsWith(suffix)
-  )) {
+  // TODO real nutrient sequence
+
+  let sequence = 1;
+
+  const nutrientTranslations = {
+    fr: {
+      energy: "Énergie",
+      fat: "Graisses",
+      saturatedFat: "Acides gras saturés",
+      carbohydrates: "Glucides",
+      sugars: "Sucres",
+      protein: "Protéines",
+      salt: "Sel",
+    }
+  }
+
+  const nutrientOrder = ["energy","fat", "saturatedFat","carbohydrates", "sugars", "protein", "salt"]
+
+  const jsonldNutrients = Object.entries(product).filter((me) =>
+  me[0].endsWith(suffix))
+
+  for (const e of jsonldNutrients) {
     const nutrient =
       Array.isArray(e[1]) == false
         ? e[1]
@@ -74,7 +93,13 @@ function isolateNutritionMeasurementType(product) {
     nutrientList.push({
       nutrient: {
         code: e[0].replace(suffix, ""),
+        translations: {
+          fr: {
+            name: nutrientTranslations.fr[e[0].replace(suffix, "")]
+          }
+        }
       },
+      sequence: sequence.toString(),
       quantity: {
         value: nutrient["s:value"]["@value"],
         unit: {
@@ -82,10 +107,23 @@ function isolateNutritionMeasurementType(product) {
         },
       },
     });
+    sequence++;
     delete product[e[0]];
   }
 
+  nutrientList.forEach((n) => enrichUnit(n.quantity.unit));
+
+  nutrientList = nutrientList.sort((a, b) =>  nutrientOrder.indexOf(a.nutrient.code) - nutrientOrder.indexOf(b.nutrient.code))
+
   product.nutrientList = nutrientList;
+}
+
+function enrichUnit(unit) {
+  if (unit.code == "GRM") unit.symbol = "gr";
+
+  if (unit.code == "KJO") unit.symbol = "KJ";
+
+  if (unit.code == "MLT") unit.symbol = "ml";
 }
 
 export function extractFromProduct(product) {
@@ -122,8 +160,8 @@ export function extractFromProduct(product) {
 
   // skip netContent
   // skip nutrient
-  delete product.nutrientList;
-  delete product.netContent;
+  // product.nutrientList;
+  // product.netContent;
 
   const context = {
     products: [product],
@@ -169,15 +207,17 @@ function mapProduct(product, options) {
 
   // TODO factorise to quantity function
   if (product.netContent != null) {
-    product.netContent = {
+    product.netContents = [{
       value: parseFloat(product.netContent["s:value"]["@value"]),
       unit: {
         code: product.netContent["s:unitCode"],
       },
-    };
-}
+    }];
 
-  if(product.grossWeight != null) {
+    product.netContents.forEach(n => enrichUnit(n.unit))
+  }
+
+  if (product.grossWeight != null) {
     product.grossWeight = {
       value: parseFloat(product.grossWeight["s:value"]["@value"]),
       unit: {
@@ -187,8 +227,9 @@ function mapProduct(product, options) {
   }
 
   if (product.supplierSpecifiedMinimumConsumerStorageDays != null)
-    product.supplierSpecifiedMinimumConsumerStorageDays =
-    parseInt(product.supplierSpecifiedMinimumConsumerStorageDays["@value"]);
+    product.supplierSpecifiedMinimumConsumerStorageDays = parseInt(
+      product.supplierSpecifiedMinimumConsumerStorageDays["@value"]
+    );
 
   if (product.image != null)
     product.image = {
@@ -204,7 +245,9 @@ function mapProduct(product, options) {
     };
 
     if (i.ingredientContentPercentage != null)
-      ing.contentPercentage = parseFloat(i.ingredientContentPercentage["@value"]);
+      ing.contentPercentage = parseFloat(
+        i.ingredientContentPercentage["@value"]
+      );
 
     return ing;
   });
@@ -229,16 +272,14 @@ function mapOrganizationToWorkspace(workspace, options) {
     },
   }))[0];
 
-  /*
-  producer.contactPoints.forEach(c => {
+  
+  workspace.contactPoints.forEach(c => {
     c.title = c.contactTitle,
     c.type = c.contactType
     delete c.contactTitle
     delete c.contactType
   })
-  */
-
-  delete workspace.contactPoints;
+  
 
   workspace.ids = [
     "batra/organizations/" + workspace["@id"],
