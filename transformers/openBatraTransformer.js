@@ -40,6 +40,7 @@ const assignTranslationToProperties = [
   "consumerStorageInstructions",
   "consumerUsageInstructions",
   "marketingMessage",
+  "countryOfOriginStatement",
 ];
 
 function assignTranslation(product, propertyName, languageOptions) {
@@ -77,27 +78,37 @@ function isolateNutritionMeasurementType(product) {
       sugars: "Sucres",
       protein: "Protéines",
       salt: "Sel",
-    }
-  }
+    },
+  };
 
-  const nutrientOrder = ["energy","fat", "saturatedFat","carbohydrates", "sugars", "protein", "salt"]
+  const nutrientOrder = [
+    "energy",
+    "fat",
+    "saturatedFat",
+    "carbohydrates",
+    "sugars",
+    "protein",
+    "salt",
+  ];
 
   const jsonldNutrients = Object.entries(product).filter((me) =>
-  me[0].endsWith(suffix))
+    me[0].endsWith(suffix)
+  );
 
   for (const e of jsonldNutrients) {
     const nutrient =
       Array.isArray(e[1]) == false
         ? e[1]
         : e[1].find((i) => i["s:unitCode"] == "KJO");
-    nutrientList.push({
+
+    const newNutrient = {
       nutrient: {
         code: e[0].replace(suffix, ""),
         translations: {
           fr: {
-            name: nutrientTranslations.fr[e[0].replace(suffix, "")]
-          }
-        }
+            name: nutrientTranslations.fr[e[0].replace(suffix, "")],
+          },
+        },
       },
       sequence: sequence.toString(),
       quantity: {
@@ -106,14 +117,25 @@ function isolateNutritionMeasurementType(product) {
           code: nutrient["s:unitCode"],
         },
       },
-    });
+    };
+
+    if (nutrient.dailyValueIntakePercent)
+      newNutrient.dailyValueIntakePercent = parseFloat(
+        nutrient.dailyValueIntakePercent["@value"]
+      );
+
+    nutrientList.push(newNutrient);
     sequence++;
     delete product[e[0]];
   }
 
   nutrientList.forEach((n) => enrichUnit(n.quantity.unit));
 
-  nutrientList = nutrientList.sort((a, b) =>  nutrientOrder.indexOf(a.nutrient.code) - nutrientOrder.indexOf(b.nutrient.code))
+  nutrientList = nutrientList.sort(
+    (a, b) =>
+      nutrientOrder.indexOf(a.nutrient.code) -
+      nutrientOrder.indexOf(b.nutrient.code)
+  );
 
   product.nutrientList = nutrientList;
 }
@@ -207,14 +229,16 @@ function mapProduct(product, options) {
 
   // TODO factorise to quantity function
   if (product.netContent != null) {
-    product.netContents = [{
-      value: parseFloat(product.netContent["s:value"]["@value"]),
-      unit: {
-        code: product.netContent["s:unitCode"],
+    product.netContents = [
+      {
+        value: parseFloat(product.netContent["s:value"]["@value"]),
+        unit: {
+          code: product.netContent["s:unitCode"],
+        },
       },
-    }];
+    ];
 
-    product.netContents.forEach(n => enrichUnit(n.unit))
+    product.netContents.forEach((n) => enrichUnit(n.unit));
   }
 
   if (product.grossWeight != null) {
@@ -272,14 +296,11 @@ function mapOrganizationToWorkspace(workspace, options) {
     },
   }))[0];
 
-  
-  workspace.contactPoints.forEach(c => {
-    c.title = c.contactTitle,
-    c.type = c.contactType
-    delete c.contactTitle
-    delete c.contactType
-  })
-  
+  workspace.contactPoints.forEach((c) => {
+    (c.title = c.contactTitle), (c.type = c.contactType);
+    delete c.contactTitle;
+    delete c.contactType;
+  });
 
   workspace.ids = [
     "batra/organizations/" + workspace["@id"],
