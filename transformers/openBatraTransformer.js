@@ -112,7 +112,7 @@ function isolateNutritionMeasurementType(product) {
       },
       sequence: sequence.toString(),
       quantity: {
-        value: nutrient["s:value"]["@value"],
+        value:  parseFloat(nutrient["s:value"]["@value"]),
         unit: {
           code: nutrient["s:unitCode"],
         },
@@ -180,11 +180,6 @@ export function extractFromProduct(product) {
     },
   ];
 
-  // skip netContent
-  // skip nutrient
-  // product.nutrientList;
-  // product.netContent;
-
   const context = {
     products: [product],
     workspaces: [workspace],
@@ -239,6 +234,8 @@ function mapProduct(product, options) {
     ];
 
     product.netContents.forEach((n) => enrichUnit(n.unit));
+
+    delete product.netContent
   }
 
   if (product.grossWeight != null) {
