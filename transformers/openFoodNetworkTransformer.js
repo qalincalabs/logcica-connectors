@@ -71,9 +71,9 @@ function productDescriptionTemplate(product) {
   <strong>Ingrédients: </strong>${product.ingredientStatement}
   </p>
   
-  ${ifNoneEmpty`<p><i>Instructions d'utilisation: </i> ${product.consumerUsageInstructions}</p>`}
+  ${ifNoneEmpty`<p><i>Instructions d'utilisation:</i> ${product.consumerUsageInstructions}</p>`}
   
-  ${ifNoneEmpty`<p><i>Instructions de stockage: ${product.consumerStorageInstructions} </i>`}
+  ${ifNoneEmpty`<p><i>Instructions de stockage:</i> ${product.consumerStorageInstructions}`}
   
   ${applyTemplate(productDescriptionNutritionTemplate, product.nutrientList)}
   `;

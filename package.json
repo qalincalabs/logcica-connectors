@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@qalincalabs/logcica-connectors",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "connectors and mappers for external platforms logCiCa can interact with",
   "main": "index.js",
   "scripts": {
