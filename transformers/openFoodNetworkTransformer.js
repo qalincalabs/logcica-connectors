@@ -65,7 +65,7 @@ function productDescriptionTemplate(product) {
   ${ifNoneEmpty`<p><i>Contenu net:</i> ${firstNetContent.value}${
     firstNetContent.unit.symbol ?? firstNetContent.unit.code
   }</p>`} 
-  ${ifNoneEmpty`<p><strong>Pourcentage d'alcool: </strong>${product.alcohol?.quantity.percentage}%</p>`}
+  ${ifNoneEmpty`<p><strong>Pourcentage d'alcool: </strong>${product.alcohol?.quantity?.percentage ?? ""}%</p>`}
   
   <p>
   <strong>Ingrédients: </strong>${product.ingredientStatement}
@@ -73,7 +73,7 @@ function productDescriptionTemplate(product) {
   
   ${ifNoneEmpty`<p><i>Instructions d'utilisation: </i> ${product.consumerUsageInstructions}</p>`}
   
-  ${ifNoneEmpty`<p><i>Instructions de stockage: </i>`}
+  ${ifNoneEmpty`<p><i>Instructions de stockage: ${product.consumerStorageInstructions} </i>`}
   
   ${applyTemplate(productDescriptionNutritionTemplate, product.nutrientList)}
   `;
