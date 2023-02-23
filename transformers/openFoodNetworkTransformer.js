@@ -24,7 +24,9 @@ function applyTemplate(template, data) {
 }
 
 function ifNoneEmpty(strings, ...args) {
-  if (args.includes(null) || args.includes("")) return "";
+  if(args == null) return ""
+  // TODO : why is args[0] == null required when args.includes(null)
+  if (args.includes(null) || args.includes("") || args[0] == null) return "";
   return strings.reduce(
     (acc, currentString, index) => acc + currentString + (args[index] || ""),
     ""
@@ -51,9 +53,11 @@ function productDescriptionTemplate(product) {
     : null; // using fr instead of be (in dutch) or be-fr (strange website display ...)
   const batraUrl = `https://www.batra.link/batra2.0/productFull.html?gtin=${product.gtin}`;
 
+  console.log(product.countryOfOriginStatement)
+
   return `
   <p><i>${product.description}</i></p>
-  <p>${product.marketingMessage}</p>
+  ${ifNoneEmpty`<p>${product.marketingMessage}</p>`}
   <p> Fiche produit sur 
     <a href="${batraUrl}">Batra</a>
     ${ifNoneEmpty`| <a href="${offUrl}">Open Food Facts</a>`}
@@ -61,7 +65,7 @@ function productDescriptionTemplate(product) {
   
   <p><i>GTIN:</i> ${product.gtin}</p>
   
-  ${ifNoneEmpty`<p><i>Origine:</i> ${product.countryOfOriginStatement}</p>`}
+  ${ifNoneEmpty`<p><i>Origine:</i> ${product.countryOfOriginStatement }</p>`}
   ${ifNoneEmpty`<p><i>Contenu net:</i> ${firstNetContent.value}${
     firstNetContent.unit.symbol ?? firstNetContent.unit.code
   }</p>`} 

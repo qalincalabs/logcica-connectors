@@ -284,6 +284,10 @@ function mapOrganizationToWorkspace(workspace, options) {
   workspace.renameProperty("taxID", "taxId");
   delete workspace.globalLocationNumber;
 
+  if(Array.isArray(workspace.address) == false){
+    workspace.address = [workspace.address]
+  }
+
   workspace.address = workspace.address.map((a) => ({
     street: a.streetAddress,
     postalCode: a.postalCode,
@@ -293,7 +297,7 @@ function mapOrganizationToWorkspace(workspace, options) {
     },
   }))[0];
 
-  workspace.contactPoints.forEach((c) => {
+  workspace.contactPoints?.forEach((c) => {
     (c.title = c.contactTitle), (c.type = c.contactType);
     delete c.contactTitle;
     delete c.contactType;
