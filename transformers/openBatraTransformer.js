@@ -257,7 +257,7 @@ function mapProduct(product, options) {
       url: product.image["s:url"]["@id"],
     };
 
-  product.ingredientList = product.ingredient.map((i) => {
+  product.ingredientList = product.ingredient?.map((i) => {
     const ing = {
       ingredient: {
         name: extractMainTranslation(i.ingredientName, options.language),
