@@ -56,7 +56,7 @@ function productDescriptionTemplate(product) {
   console.log(product.countryOfOriginStatement)
 
   return `
-  <p><i>${product.description}</i></p>
+  ${ifNoneEmpty`<p><i>${product.description}</i></p>`}
   ${ifNoneEmpty`<p>${product.marketingMessage}</p>`}
   <p> Fiche produit sur 
     <a href="${batraUrl}">Batra</a>
@@ -66,14 +66,12 @@ function productDescriptionTemplate(product) {
   <p><i>GTIN:</i> ${product.gtin}</p>
   
   ${ifNoneEmpty`<p><i>Origine:</i> ${product.countryOfOriginStatement }</p>`}
-  ${ifNoneEmpty`<p><i>Contenu net:</i> ${firstNetContent.value}${
-    firstNetContent.unit.symbol ?? firstNetContent.unit.code
+  ${ifNoneEmpty`<p><i>Contenu net:</i> ${firstNetContent?.value}${
+    firstNetContent?.unit.symbol ?? firstNetContent?.unit.code
   }</p>`} 
   ${ifNoneEmpty`<p><strong>Pourcentage d'alcool: </strong>${product.alcohol?.quantity?.percentage ?? ""}%</p>`}
   
-  <p>
-  <strong>Ingrédients: </strong>${product.ingredientStatement}
-  </p>
+  ${ifNoneEmpty`<p><strong>Ingrédients: </strong>${product.ingredientStatement}</p>`}
   
   ${ifNoneEmpty`<p><i>Instructions d'utilisation:</i> ${product.consumerUsageInstructions}</p>`}
   
