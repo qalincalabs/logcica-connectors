@@ -82,6 +82,9 @@ function productDescriptionTemplate(product) {
 }
 
 function productDescriptionNutritionTemplate(nutrientList) {
+  if(nutrientList == null || nutrientList.length == 0)
+    return ""
+    
   return `
     <p>
       <strong><u>Valeurs nutritionnelles</u><strong> (% des apports calculés sur base de 100g)
