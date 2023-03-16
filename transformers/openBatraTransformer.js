@@ -275,7 +275,21 @@ function mapProduct(product, options) {
 
   delete product.ingredient;
 
+  product.allergenList = product.hasAllergen?.map(a => ({
+      allergen: codeIdToGlobalKey(a.allergenType["@id"]),
+      levelOfContainment: codeIdToGlobalKey(a.allergenLevelOfContainmentCode["@id"]),
+    })
+  )
+
+  delete product.hasAllergen
+
   product.ids = ["batra/products/" + product.gtin, "gtin/" + product.gtin];
+}
+
+function codeIdToGlobalKey(id){
+  const split = id.replace("gs1:","").split("-")
+  const globalKey = "gs1" + "/" + split[0].split(/\.?(?=[A-Z])/).join('_').toLowerCase() + "/" + split[1].toLowerCase()
+  return globalKey
 }
 
 function mapOrganizationToWorkspace(workspace, options) {

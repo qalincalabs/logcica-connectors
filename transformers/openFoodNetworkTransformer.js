@@ -46,6 +46,20 @@ contactPoint.telephone ? ", " + contactPoint.telephone : ""
 }${contactPoint.email ? ", " + contactPoint.email : ""}
 */
 
+/* Supported properties
+gtin
+imageUrl
+netContent
+description
+marketingMessage
+countryOfOriginStatement
+alcoholQuantityPercentage
+ingredientStatement
+nutrients (KJ, dailyValueIntakePercent)
+consumerUsageInstructions
+consumerStorageInstructions
+*/
+
 function productDescriptionTemplate(product) {
   const firstNetContent = product.netContents?.[0];
   const offUrl = product.gtin.startsWith("054")
@@ -84,7 +98,7 @@ function productDescriptionTemplate(product) {
 function productDescriptionNutritionTemplate(nutrientList) {
   if(nutrientList == null || nutrientList.length == 0)
     return ""
-    
+
   return `
     <p>
       <strong><u>Valeurs nutritionnelles</u><strong> (% des apports calculés sur base de 100g)
