@@ -238,6 +238,10 @@ function mapProduct(product, options) {
     delete product.netContent
   }
 
+  if(product.percentageOfAlcoholByVolume != null){
+    product.alcoholPercentage = parseFloat(product.percentageOfAlcoholByVolume["@value"])
+  }
+
   if (product.grossWeight != null) {
     product.grossWeight = {
       value: parseFloat(product.grossWeight["s:value"]["@value"]),
@@ -286,10 +290,42 @@ function mapProduct(product, options) {
   product.ids = ["batra/products/" + product.gtin, "gtin/" + product.gtin];
 }
 
+const translations = {
+  fr: {
+    "gs1/voc/level_of_containment/contains": "Contient",
+    "gs1/voc/level_of_containment/free_from": "Sans",
+    "gs1/voc/level_of_containment/may_contain": "Peut contenir",
+    "gs1/voc/allergen_type/fish": "Poissons",
+    "gs1/voc/allergen_type/eggs": "Oeufs",
+    "gs1/voc/allergen_type/celery": "Céleri",
+    "gs1/voc/allergen_type/milk": "Lait",
+    "gs1/voc/allergen_type/lupine": "Lupin",
+    "gs1/voc/allergen_type/mustard": "Moutarde",
+    "gs1/voc/allergen_type/crustaceans": "Crustacés",
+    "gs1/voc/allergen_type/tree_nuts": "Noix",
+    "gs1/voc/allergen_type/sesame_seeds": "Graines de sésame",
+    "gs1/voc/allergen_type/sulphur_dioxide": "Dioxyde de soufre et sulfites",
+    "gs1/voc/allergen_type/cereals_containing_gluten": "Céréales contenant du gluten",
+    "gs1/voc/allergen_type/soybeans": "Soja",
+    "gs1/voc/allergen_type/peanuts": "Arachides",
+    "gs1/voc/allergen_type/molluscs": "Mollusques"
+  }
+}
+
 function codeIdToGlobalKey(id){
   const split = id.replace("gs1:","").split("-")
-  const globalKey = "gs1" + "/" + split[0].split(/\.?(?=[A-Z])/).join('_').toLowerCase() + "/" + split[1].toLowerCase()
-  return globalKey
+  const key = split[1].toLowerCase()
+  const globalKey = "gs1/voc/" + split[0].split(/\.?(?=[A-Z])/).filter(n => n != "Code").join('_').toLowerCase() + "/" + key
+  
+  return {
+    key: key,
+    globalKey: globalKey,
+    translations: {
+      fr: {
+        name: translations.fr[globalKey]
+      }
+    }
+  }
 }
 
 function mapOrganizationToWorkspace(workspace, options) {
