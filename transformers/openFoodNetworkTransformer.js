@@ -83,19 +83,19 @@ function productDescriptionTemplate(product) {
   }%</p>`}
   
   ${ifNoneEmpty`<p><strong>Ingrédients: </strong>${product.ingredientStatement}</p>`}
+
+  ${applyTemplate(productDescriptionAllergenTemplate, product.allergenList)}
   
   ${ifNoneEmpty`<p><i>Instructions d'utilisation:</i> ${product.consumerUsageInstructions}</p>`}
   
   ${ifNoneEmpty`<p><i>Instructions de stockage:</i> ${product.consumerStorageInstructions}`}
 
-  ${applyTemplate(productDescriptionAllergenTemplate, product.allergenList)}
+  <p> <strong>Fiche produit</strong> de *${product.gtin}* sur 
+  <a href="${batraUrl}">Batra</a>
+  ${ifNoneEmpty`| <a href="${offUrl}">Open Food Facts</a>`}
+  </p>
   
   ${applyTemplate(productDescriptionNutritionTemplate, product.nutrientList)}
-
-  <p> Fiche produit de *${product.gtin}* sur 
-    <a href="${batraUrl}">Batra</a>
-    ${ifNoneEmpty`| <a href="${offUrl}">Open Food Facts</a>`}
-  </p>
   `;
 }
 
@@ -104,7 +104,7 @@ function productDescriptionNutritionTemplate(nutrientList) {
 
   return `
     <p>
-      <strong><u>Valeurs nutritionnelles</u><strong> (% des apports calculés sur base de 100g)
+      <strong><u>Valeurs nutritionnelles</u></strong> (% des apports calculés sur base de 100g)
     </p> 
 
     ${nutrientList
@@ -144,44 +144,51 @@ function productDescriptionNutritionTemplate(nutrientList) {
 function productDescriptionAllergenTemplate(allergenList) {
   if (allergenList == null || allergenList.length == 0) return "";
 
+  const mainAllergens = [
+    "fish",
+    "eggs",
+    "celery",
+    "milk",
+    "lupine",
+    "mustard",
+    "crustaceans",
+    "tree_nuts",
+    "sesame_seeds",
+    "sulphur_dioxide",
+    "cereals_containing_gluten",
+    "soybeans",
+    "peanuts",
+    "molluscs",
+  ]
+
+  const mainAllergensOnly = allergenList.filter((i) => mainAllergens.includes(i.allergen.key))
+
+  const groupByPerLevelOfContainment = groupItemBy(mainAllergensOnly,"levelOfContainment.translations.fr.name")
+
+  console.log(JSON.stringify(groupByPerLevelOfContainment))
+  
+
   return `
     <p>
-      <strong><u>Allergènes</u><strong>
+      <strong><u>Allergènes</u></strong>
     </p> 
 
-    ${allergenList
-      .filter((i) =>
-        [
-          "fish",
-          "eggs",
-          "celery",
-          "milk",
-          "lupine",
-          "mustard",
-          "crustaceans",
-          "tree_nuts",
-          "sesame_seeds",
-          "sulphur_dioxide",
-          "cereals_containing_gluten",
-          "soybeans",
-          "peanuts",
-          "molluscs",
-        ].includes(i.allergen.key)
-      )
-      .map((i) => {
-        return `<p>${
-          i.levelOfContainment.translations?.fr?.name ??
-          i.levelOfContainment.name ?? // should this be code ?
-          i.levelOfContainment.key 
-        } ${
-          (
-            i.allergen.translations?.fr?.name ??
-            i.allergen.name ??
-            i.allergen.key // should this be code ?
-          ).toLowerCase() 
-        }
-        </p>`;
-      })
-      .join("")}
+    ${
+      Object.entries(groupByPerLevelOfContainment).map(([k, v], i) => {
+        return `<p>${k} ${v.map(l => l.allergen.translations.fr.name.toLowerCase()).join(", ")}</p>`;
+      }).join('')}
     `;
+}
+
+function groupItemBy(array, property) {
+  var hash = {},
+      props = property.split('.');
+  for (var i = 0; i < array.length; i++) {
+      var key = props.reduce(function(acc, prop) {
+          return acc && acc[prop];
+      }, array[i]);
+      if (!hash[key]) hash[key] = [];
+      hash[key].push(array[i]);
+  }
+  return hash;
 }
