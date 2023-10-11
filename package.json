@@ -26,6 +26,7 @@
     "@fragaria/address-formatter": "^5.0.1",
     "@qalincalabs/consolidator": "^1.4.1",
     "@qalincalabs/limosa": "^1.6.4",
+    "bson": "^6.1.0",
     "node-fetch": "^2.6.8",
     "object-hash": "^3.0.0"
   },

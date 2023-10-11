@@ -1,5 +1,8 @@
 export const uniqWith = (arr, fn) => arr.filter((element, index) => arr.findIndex((step) => fn(element, step)) === index);
 
+export function camelToSnakeCase(str) {
+  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+} 
 
 export function sluggify(str) {
   return str
