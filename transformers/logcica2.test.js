@@ -55,6 +55,21 @@ test("logcica 2 - product", async () => {
       })),
   };
 
+  for(const netContent of logcica1Product.netContents){
+    if(["ml"].includes(netContent.unit?.symbol)){
+      product.netVolume = {
+        value: netContent.value,
+        unit: netContent.unit.symbol
+      }
+    }
+    if(["g"].includes(netContent.unit?.symbol)){
+      product.netVolume = {
+        value: netContent.value,
+        unit: netContent.unit.symbol
+      }
+    }
+  }
+
   const descriptionsList = [
     "description",
     "ingredientStatement",
@@ -260,7 +275,7 @@ const logcica1Product = {
     },
   ],
   publishedAt: null,
-  netContents: [{ value: 330, unit: { code: "MLT", symbol: "ml" } }],
+  netContents: [{ value: 330, unit: { code: "MLT", symbol: "mL" } }],
   alcoholPercentage: 6,
   ingredientList: [
     { ingredient: { name: "eau (95%)" }, sequence: "1" },
@@ -268,126 +283,6 @@ const logcica1Product = {
     { ingredient: { name: "levure" }, sequence: "3" },
   ],
   allergenList: [
-    {
-      allergen: {
-        key: "fish",
-        globalKey: "gs1/voc/allergen_type/fish",
-        translations: { fr: { name: "Poissons" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
-    {
-      allergen: {
-        key: "eggs",
-        globalKey: "gs1/voc/allergen_type/eggs",
-        translations: { fr: { name: "Oeufs" } },
-      },
-      levelOfContainment: {
-        key: "free_from",
-        globalKey: "gs1/voc/level_of_containment/free_from",
-        translations: { fr: { name: "Sans" } },
-      },
-    },
-    {
-      allergen: {
-        key: "celery",
-        globalKey: "gs1/voc/allergen_type/celery",
-        translations: { fr: { name: "Céleri" } },
-      },
-      levelOfContainment: {
-        key: "may_contain",
-        globalKey: "gs1/voc/level_of_containment/may_contain",
-        translations: { fr: { name: "Peut contenir" } },
-      },
-    },
-    {
-      allergen: {
-        key: "milk",
-        globalKey: "gs1/voc/allergen_type/milk",
-        translations: { fr: { name: "Lait" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
-    {
-      allergen: {
-        key: "lupine",
-        globalKey: "gs1/voc/allergen_type/lupine",
-        translations: { fr: { name: "Lupin" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
-    {
-      allergen: {
-        key: "mustard",
-        globalKey: "gs1/voc/allergen_type/mustard",
-        translations: { fr: { name: "Moutarde" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
-    {
-      allergen: {
-        key: "crustaceans",
-        globalKey: "gs1/voc/allergen_type/crustaceans",
-        translations: { fr: { name: "Crustacés" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
-    {
-      allergen: {
-        key: "molluscs",
-        globalKey: "gs1/voc/allergen_type/molluscs",
-        translations: { fr: { name: "Mollusques" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
-    {
-      allergen: {
-        key: "peanuts",
-        globalKey: "gs1/voc/allergen_type/peanuts",
-        translations: { fr: { name: "Arachides" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
-    {
-      allergen: {
-        key: "soybeans",
-        globalKey: "gs1/voc/allergen_type/soybeans",
-        translations: { fr: { name: "Soja" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
     {
       allergen: {
         key: "cereals_containing_gluten",
@@ -411,31 +306,7 @@ const logcica1Product = {
         globalKey: "gs1/voc/level_of_containment/contains",
         translations: { fr: { name: "Contient" } },
       },
-    },
-    {
-      allergen: {
-        key: "sesame_seeds",
-        globalKey: "gs1/voc/allergen_type/sesame_seeds",
-        translations: { fr: { name: "Graines de sésame" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
-    {
-      allergen: {
-        key: "tree_nuts",
-        globalKey: "gs1/voc/allergen_type/tree_nuts",
-        translations: { fr: { name: "Noix" } },
-      },
-      levelOfContainment: {
-        key: "contains",
-        globalKey: "gs1/voc/level_of_containment/contains",
-        translations: { fr: { name: "Contient" } },
-      },
-    },
+    }
   ],
   ids: [
     "batra/products/01454000020015",

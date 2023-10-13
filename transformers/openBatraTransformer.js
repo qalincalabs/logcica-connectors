@@ -141,11 +141,11 @@ function isolateNutritionMeasurementType(product) {
 }
 
 function enrichUnit(unit) {
-  if (unit.code == "GRM") unit.symbol = "gr";
+  if (unit.code == "GRM") unit.symbol = "g";
 
-  if (unit.code == "KJO") unit.symbol = "KJ";
+  if (unit.code == "KJO") unit.symbol = "kJ";
 
-  if (unit.code == "MLT") unit.symbol = "ml";
+  if (unit.code == "MLT") unit.symbol = "mL";
 }
 
 export function extractFromProduct(product) {
